@@ -1,0 +1,13 @@
+replicaCount: 2
+image:
+  repository: ghcr.io/sartim/storemesh-inventory-service
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 50051
+secrets:
+  existingSecret: storemesh-inventory-service-secrets
+resources:
+  requests: {cpu: 100m, memory: 128Mi}
+  limits: {cpu: 500m, memory: 512Mi}
