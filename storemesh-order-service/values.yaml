@@ -8,6 +8,9 @@ service:
   port: 50051
 secrets:
   existingSecret: storemesh-order-service-secrets
+dependencies:
+  productAddress: storemesh-product-service.storemesh-product-service.svc.cluster.local:50051
+  inventoryAddress: storemesh-inventory-service.storemesh-inventory-service.svc.cluster.local:50051
 resources:
   requests: {cpu: 100m, memory: 128Mi}
   limits: {cpu: 500m, memory: 512Mi}

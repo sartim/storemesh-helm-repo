@@ -19,4 +19,8 @@ spec:
           env:
             - name: DATABASE_URL
               valueFrom: {secretKeyRef: {name: {{ .Values.secrets.existingSecret }}, key: DATABASE_URL}}
+            - name: PRODUCT_SERVICE_ADDRESS
+              value: {{ .Values.dependencies.productAddress | quote }}
+            - name: INVENTORY_SERVICE_ADDRESS
+              value: {{ .Values.dependencies.inventoryAddress | quote }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
