@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "storemesh-user-service.fullname" . }}
+  labels:
+    {{- include "storemesh-user-service.labels" . | nindent 4 }}
+data:
+  ENVIRONMENT: {{ .Values.environment | quote }}
+  GRPC_PORT: {{ .Values.config.grpcPort | quote }}
+  HTTP_PORT: {{ .Values.config.httpPort | quote }}
+  JWT_ISSUER: {{ .Values.config.jwtIssuer | quote }}
+  JWT_AUDIENCE: {{ .Values.config.jwtAudience | quote }}
+  JWT_ACCESS_TTL: {{ .Values.config.jwtAccessTTL | quote }}
+  JWT_REFRESH_TTL: {{ .Values.config.jwtRefreshTTL | quote }}
+  DB_MAX_OPEN_CONNS: {{ .Values.config.dbMaxOpenConns | quote }}
+  DB_MAX_IDLE_CONNS: {{ .Values.config.dbMaxIdleConns | quote }}
+  DB_CONN_MAX_LIFETIME: {{ .Values.config.dbConnMaxLifetime | quote }}
+  OTLP_ENDPOINT: {{ .Values.config.otlpEndpoint | quote }}
+  SERVICE_NAME: {{ .Values.config.serviceName | quote }}
+  SERVICE_VERSION: {{ .Values.config.serviceVersion | quote }}
