@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storemesh-order-service
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {app.kubernetes.io/name: storemesh-order-service}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: storemesh-order-service}
+    spec:
+      securityContext: {runAsNonRoot: true, runAsUser: 65532, runAsGroup: 65532, fsGroup: 65532}
+      containers:
+        - name: order-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports: [{name: grpc, containerPort: 50051}]
+          env:
+            - name: DATABASE_URL
+              valueFrom: {secretKeyRef: {name: {{ .Values.secrets.existingSecret }}, key: DATABASE_URL}}
+          resources: {{- toYaml .Values.resources | nindent 12 }}

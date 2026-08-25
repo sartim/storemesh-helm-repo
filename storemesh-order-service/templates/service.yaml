@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: storemesh-order-service
+spec:
+  type: {{ .Values.service.type }}
+  selector: {app.kubernetes.io/name: storemesh-order-service}
+  ports: [{name: grpc, port: {{ .Values.service.port }}, targetPort: grpc}]
