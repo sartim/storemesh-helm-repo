@@ -1,0 +1,16 @@
+{{- if .Values.prometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: storemesh-product-service
+  labels: {{- toYaml .Values.prometheusRule.additionalLabels | nindent 4 }}
+spec:
+  groups:
+    - name: storemesh-product-service
+      rules:
+        - alert: StoreMeshProductServiceUnavailable
+          expr: kube_deployment_status_replicas_available{namespace="{{ .Release.Namespace }}",deployment="storemesh-product-service"} < 1
+          for: 10m
+          labels: {severity: critical}
+          annotations: {summary: StoreMesh Product Service has no available replicas}
+{{- end }}

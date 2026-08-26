@@ -121,6 +121,10 @@ serviceMonitor:
   scrapeTimeout: 10s
   additionalLabels: {}
 
+prometheusRule:
+  enabled: false
+  additionalLabels: {}
+
 nodeSelector: {}
 tolerations: []
 affinity: {}

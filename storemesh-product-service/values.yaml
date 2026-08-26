@@ -6,6 +6,9 @@ networkPolicy:
   enabled: true
   allowedIngressNamespaces:
     - storemesh-order-service
+prometheusRule:
+  enabled: false
+  additionalLabels: {}
 
 image:
   repository: ghcr.io/sartim/storemesh-product-service
