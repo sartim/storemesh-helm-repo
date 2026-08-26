@@ -1,7 +1,7 @@
 replicaCount: 2
 image:
   repository: ghcr.io/sartim/storemesh-order-service
-  tag: "0.1.0"
+  tag: "0.2.0"
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
