@@ -5,6 +5,9 @@ pdb:
 networkPolicy:
   enabled: true
   allowedIngressNamespaces: []
+prometheusRule:
+  enabled: false
+  additionalLabels: {}
 image:
   repository: ghcr.io/sartim/storemesh-order-service
   tag: "0.2.0"

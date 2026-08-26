@@ -1,0 +1,22 @@
+{{- if .Values.prometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "storemesh-user-service.fullname" . }}
+  labels:
+    {{- toYaml .Values.prometheusRule.additionalLabels | nindent 4 }}
+spec:
+  groups:
+    - name: storemesh-user-service
+      rules:
+        - alert: StoreMeshUserServiceUnavailable
+          expr: kube_deployment_status_replicas_available{namespace="{{ .Release.Namespace }}",deployment="{{ include "storemesh-user-service.fullname" . }}"} < 1
+          for: 10m
+          labels: {severity: critical}
+          annotations: {summary: StoreMesh User Service has no available replicas}
+        - alert: StoreMeshUserServiceRestarting
+          expr: increase(kube_pod_container_status_restarts_total{namespace="{{ .Release.Namespace }}",container="user-service"}[15m]) > 3
+          for: 5m
+          labels: {severity: warning}
+          annotations: {summary: StoreMesh User Service is restarting repeatedly}
+{{- end }}
