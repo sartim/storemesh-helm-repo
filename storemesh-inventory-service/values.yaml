@@ -1,4 +1,11 @@
 replicaCount: 2
+pdb:
+  enabled: true
+  minAvailable: 1
+networkPolicy:
+  enabled: true
+  allowedIngressNamespaces:
+    - storemesh-order-service
 image:
   repository: ghcr.io/sartim/storemesh-inventory-service
   tag: "0.2.0"
