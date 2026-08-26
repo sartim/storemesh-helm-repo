@@ -1,0 +1,22 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: storemesh-order-service
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: storemesh-order-service
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector: {}
+{{- range .Values.networkPolicy.allowedIngressNamespaces }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . | quote }}
+{{- end }}
+      ports:
+        - protocol: TCP
+          port: 50051
+{{- end }}
