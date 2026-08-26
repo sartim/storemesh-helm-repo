@@ -36,6 +36,15 @@ service:
   httpPort: 8080
   grpcPort: 50051
 
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  host: api.storemesh.example.com
+  tls:
+    enabled: true
+    secretName: storemesh-user-service-tls
+
 environment: production
 
 config:
