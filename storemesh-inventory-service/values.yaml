@@ -15,6 +15,11 @@ service:
   port: 50051
 secrets:
   existingSecret: storemesh-inventory-service-secrets
+externalSecrets:
+  enabled: false
+  secretStoreRef: {name: "", kind: ClusterSecretStore}
+  remoteKey: ""
+  targetName: ""
 resources:
   requests: {cpu: 100m, memory: 128Mi}
   limits: {cpu: 500m, memory: 512Mi}

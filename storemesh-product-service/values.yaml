@@ -18,6 +18,11 @@ service:
 
 secrets:
   existingSecret: storemesh-product-service-secrets
+externalSecrets:
+  enabled: false
+  secretStoreRef: {name: "", kind: ClusterSecretStore}
+  remoteKey: ""
+  targetName: ""
 
 config:
   jwtIssuer: storemesh-product-service
