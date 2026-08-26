@@ -14,6 +14,11 @@ service:
   port: 50051
 secrets:
   existingSecret: storemesh-order-service-secrets
+externalSecrets:
+  enabled: false
+  secretStoreRef: {name: "", kind: ClusterSecretStore}
+  remoteKey: ""
+  targetName: ""
 dependencies:
   productAddress: storemesh-product-service.storemesh-product-service.svc.cluster.local:50051
   inventoryAddress: storemesh-inventory-service.storemesh-inventory-service.svc.cluster.local:50051

@@ -59,6 +59,13 @@ secrets:
     DATABASE_URL: ""
     REDIS_URL: ""
     JWT_SECRET: ""
+externalSecrets:
+  enabled: false
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+  remoteKey: ""
+  targetName: ""
 
 resources:
   requests:
