@@ -1,0 +1,38 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "storemesh-bff.fullname" . }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "storemesh-bff.name" . }}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+{{- range .Values.networkPolicy.allowedIngressNamespaces }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . | quote }}
+{{- end }}
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+{{- range .Values.networkPolicy.allowedEgressNamespaces }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . | quote }}
+{{- end }}
+      ports:
+        - protocol: TCP
+          port: 50051
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+{{- end }}

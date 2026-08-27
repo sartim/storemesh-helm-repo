@@ -1,0 +1,33 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/sartim/storemesh-bff
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+config:
+  productServiceAddr: storemesh-product-service.storemesh-product-service.svc.cluster.local:50051
+  orderServiceAddr: storemesh-order-service.storemesh-order-service.svc.cluster.local:50051
+  userServiceAddr: storemesh-user-service.storemesh-user-service.svc.cluster.local:50051
+  corsAllowedOrigin: http://localhost:3000
+
+networkPolicy:
+  enabled: true
+  allowedIngressNamespaces:
+    - storemesh-frontend
+  allowedEgressNamespaces:
+    - storemesh-product-service
+    - storemesh-order-service
+    - storemesh-user-service
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
