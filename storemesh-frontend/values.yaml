@@ -18,6 +18,11 @@ ingress:
     enabled: false
     secretName: storemesh-frontend-tls
 
+istio:
+  enabled: true
+  host: storemesh.local
+  gatewayNamespace: istio-ingress
+
 resources:
   requests:
     cpu: 100m

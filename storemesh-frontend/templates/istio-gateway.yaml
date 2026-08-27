@@ -1,0 +1,19 @@
+{{- if .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: {{ include "storemesh-frontend.fullname" . }}
+  namespace: {{ .Values.istio.gatewayNamespace }}
+  labels:
+    app.kubernetes.io/part-of: storemesh
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - {{ .Values.istio.host | quote }}
+{{- end }}

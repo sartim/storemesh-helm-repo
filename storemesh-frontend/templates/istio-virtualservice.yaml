@@ -1,0 +1,20 @@
+{{- if .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: {{ include "storemesh-frontend.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "storemesh-frontend.name" . }}
+    app.kubernetes.io/part-of: storemesh
+spec:
+  hosts:
+    - {{ .Values.istio.host | quote }}
+  gateways:
+    - {{ printf "%s/%s" .Values.istio.gatewayNamespace (include "storemesh-frontend.fullname" .) | quote }}
+  http:
+    - route:
+        - destination:
+            host: {{ include "storemesh-frontend.fullname" . }}
+            port:
+              number: {{ .Values.service.port }}
+{{- end }}
