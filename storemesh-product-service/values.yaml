@@ -7,6 +7,7 @@ networkPolicy:
   allowedIngressNamespaces:
     - storemesh-order-service
     - storemesh-bff
+    - storemesh-staging-bff
 prometheusRule:
   enabled: false
   additionalLabels: {}
