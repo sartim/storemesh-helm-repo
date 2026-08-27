@@ -4,7 +4,8 @@ pdb:
   minAvailable: 1
 networkPolicy:
   enabled: true
-  allowedIngressNamespaces: []
+  allowedIngressNamespaces:
+    - storemesh-bff
 prometheusRule:
   enabled: false
   additionalLabels: {}
