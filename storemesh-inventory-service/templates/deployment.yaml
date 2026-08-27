@@ -15,7 +15,9 @@ spec:
         - name: inventory-service
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports: [{name: grpc, containerPort: 50051}]
+          ports:
+            - {name: grpc, containerPort: 50051}
+            - {name: http, containerPort: 8080}
           env:
             - name: DATABASE_URL
               valueFrom: {secretKeyRef: {name: {{ .Values.secrets.existingSecret }}, key: DATABASE_URL}}

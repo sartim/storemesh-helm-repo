@@ -5,4 +5,6 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   selector: {app.kubernetes.io/name: storemesh-inventory-service}
-  ports: [{name: grpc, port: {{ .Values.service.port }}, targetPort: grpc}]
+  ports:
+    - {name: grpc, port: {{ .Values.service.port }}, targetPort: grpc}
+    - {name: http, port: 8080, targetPort: http}

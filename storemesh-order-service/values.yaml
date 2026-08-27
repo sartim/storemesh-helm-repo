@@ -8,6 +8,11 @@ networkPolicy:
 prometheusRule:
   enabled: false
   additionalLabels: {}
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  additionalLabels: {}
 image:
   repository: ghcr.io/sartim/storemesh-order-service
   tag: "0.2.0"
