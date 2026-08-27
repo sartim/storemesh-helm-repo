@@ -25,6 +25,10 @@ on:
         description: Immutable image tag to test
         required: true
         type: string
+    secrets:
+      GHCR_READ_TOKEN:
+        description: Read-only GHCR token for cross-repository image pulls
+        required: false
 
 permissions:
   contents: read
@@ -58,7 +62,7 @@ jobs:
 
       - name: Authenticate to GHCR
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GHCR_READ_TOKEN || secrets.GITHUB_TOKEN }}
         run: printf '%s' "$GH_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
 
       - name: Load application image into Kind
