@@ -1,0 +1,107 @@
+name: Deploy Helm chart
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: GitHub deployment environment
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      chart:
+        description: Chart directory to deploy
+        required: true
+        type: choice
+        options:
+          - storemesh-bff
+          - storemesh-frontend
+          - storemesh-product-service
+          - storemesh-inventory-service
+          - storemesh-order-service
+          - storemesh-user-service
+      namespace:
+        description: Kubernetes namespace for the release
+        required: true
+        type: string
+      image_tag:
+        description: Immutable application image tag
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy ${{ inputs.chart }} to ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    timeout-minutes: 15
+    concurrency:
+      group: storemesh-helm-deploy-${{ inputs.environment }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Check out Helm repository
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v5
+        with:
+          version: v3.19.0
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.31.4
+
+      - name: Configure Kubernetes access
+        env:
+          KUBE_CONFIG_B64: ${{ secrets.KUBE_CONFIG_B64 }}
+          KUBE_CONTEXT: ${{ vars.KUBE_CONTEXT }}
+        run: |
+          test -n "$KUBE_CONFIG_B64" || { echo "KUBE_CONFIG_B64 is required" >&2; exit 1; }
+          test -n "$KUBE_CONTEXT" || { echo "KUBE_CONTEXT is required" >&2; exit 1; }
+          printf '%s' "$KUBE_CONFIG_B64" | base64 --decode > "$RUNNER_TEMP/kubeconfig"
+          chmod 600 "$RUNNER_TEMP/kubeconfig"
+          echo "KUBECONFIG=$RUNNER_TEMP/kubeconfig" >> "$GITHUB_ENV"
+          kubectl config use-context "$KUBE_CONTEXT"
+          kubectl cluster-info
+
+      - name: Validate inputs
+        env:
+          CHART: ${{ inputs.chart }}
+          NAMESPACE: ${{ inputs.namespace }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          case "$NAMESPACE" in
+            storemesh-*) ;;
+            *) echo "Namespace must use the storemesh-* naming convention" >&2; exit 1 ;;
+          esac
+          case "$IMAGE_TAG" in
+            *[!A-Za-z0-9._-]*|'') echo "image_tag contains invalid characters" >&2; exit 1 ;;
+          esac
+          helm lint "$CHART"
+
+      - name: Deploy chart
+        env:
+          CHART: ${{ inputs.chart }}
+          NAMESPACE: ${{ inputs.namespace }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          helm upgrade --install "$CHART" "$CHART" \
+            --namespace "$NAMESPACE" \
+            --create-namespace \
+            --set "image.tag=$IMAGE_TAG" \
+            --wait \
+            --timeout 10m
+
+      - name: Verify deployment
+        env:
+          CHART: ${{ inputs.chart }}
+          NAMESPACE: ${{ inputs.namespace }}
+        run: |
+          kubectl -n "$NAMESPACE" get deployment,service
+          kubectl -n "$NAMESPACE" rollout status "deployment/$CHART" --timeout=10m
