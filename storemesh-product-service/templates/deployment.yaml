@@ -26,6 +26,8 @@ spec:
           ports:
             - name: grpc
               containerPort: 50051
+            - name: http
+              containerPort: 8080
           env:
             - name: DATABASE_URL
               valueFrom:
