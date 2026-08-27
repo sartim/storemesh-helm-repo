@@ -1,0 +1,82 @@
+name: Temporary Kind smoke deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      chart:
+        description: Chart to deploy into the temporary Kind cluster
+        required: true
+        type: choice
+        options:
+          - storemesh-bff
+          - storemesh-frontend
+      image_tag:
+        description: Immutable image tag to test
+        required: true
+        default: 0.2.0
+        type: string
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  smoke:
+    name: Smoke test ${{ inputs.chart }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: storemesh-kind-smoke
+      cancel-in-progress: true
+
+    steps:
+      - name: Check out Helm repository
+        uses: actions/checkout@v4
+
+      - name: Create temporary Kind cluster
+        uses: helm/kind-action@v1.12.0
+        with:
+          cluster_name: storemesh-smoke
+
+      - name: Install Helm
+        uses: azure/setup-helm@v5
+        with:
+          version: v3.19.0
+
+      - name: Authenticate to GHCR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$GH_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Load application image into Kind
+        env:
+          CHART: ${{ inputs.chart }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          case "$CHART" in
+            storemesh-bff) IMAGE="ghcr.io/sartim/storemesh-bff:$IMAGE_TAG" ;;
+            storemesh-frontend) IMAGE="ghcr.io/sartim/storemesh-frontend:$IMAGE_TAG" ;;
+            *) echo "Unsupported smoke chart" >&2; exit 1 ;;
+          esac
+          docker pull "$IMAGE"
+          kind load docker-image "$IMAGE" --name storemesh-smoke
+
+      - name: Lint and deploy chart
+        env:
+          CHART: ${{ inputs.chart }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          helm lint "$CHART"
+          helm upgrade --install "$CHART" "$CHART" \
+            --namespace "$CHART" \
+            --create-namespace \
+            --set "image.tag=$IMAGE_TAG" \
+            --wait \
+            --timeout 10m
+
+      - name: Verify workload
+        env:
+          CHART: ${{ inputs.chart }}
+        run: |
+          kubectl -n "$CHART" get pods,service
+          kubectl -n "$CHART" rollout status "deployment/$CHART" --timeout=5m
