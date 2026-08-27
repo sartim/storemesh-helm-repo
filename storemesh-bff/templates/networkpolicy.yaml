@@ -18,6 +18,8 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
+        - protocol: TCP
+          port: 15006
   egress:
     - to:
 {{- range .Values.networkPolicy.allowedEgressNamespaces }}
