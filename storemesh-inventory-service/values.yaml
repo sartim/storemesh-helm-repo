@@ -16,7 +16,7 @@ serviceMonitor:
   additionalLabels: {}
 image:
   repository: ghcr.io/sartim/storemesh-inventory-service
-  tag: "0.2.0"
+  tag: "0.2.1"
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
