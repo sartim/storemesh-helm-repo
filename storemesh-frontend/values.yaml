@@ -9,6 +9,15 @@ service:
   type: ClusterIP
   port: 3000
 
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  host: storemesh.example.com
+  tls:
+    enabled: false
+    secretName: storemesh-frontend-tls
+
 resources:
   requests:
     cpu: 100m
