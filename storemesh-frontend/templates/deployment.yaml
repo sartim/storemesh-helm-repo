@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "storemesh-frontend.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "storemesh-frontend.name" . }}
+    app.kubernetes.io/part-of: storemesh
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "storemesh-frontend.name" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "storemesh-frontend.name" . }}
+        app.kubernetes.io/part-of: storemesh
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: frontend
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources: {{- toYaml .Values.resources | nindent 12 }}
