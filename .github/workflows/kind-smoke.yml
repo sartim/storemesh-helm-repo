@@ -15,6 +15,16 @@ on:
         required: true
         default: 0.2.0
         type: string
+  workflow_call:
+    inputs:
+      chart:
+        description: Chart to deploy into the temporary Kind cluster
+        required: true
+        type: string
+      image_tag:
+        description: Immutable image tag to test
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -32,6 +42,9 @@ jobs:
     steps:
       - name: Check out Helm repository
         uses: actions/checkout@v4
+        with:
+          repository: sartim/storemesh-helm-repo
+          token: ${{ github.token }}
 
       - name: Create temporary Kind cluster
         uses: helm/kind-action@v1.12.0
