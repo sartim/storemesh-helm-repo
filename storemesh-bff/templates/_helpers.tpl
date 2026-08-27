@@ -1,2 +1,6 @@
-{{- define "storemesh-bff.name" -}}storemesh-bff{{- end -}}
-{{- define "storemesh-bff.fullname" -}}storemesh-bff{{- end -}}
+{{- define "storemesh-bff.name" -}}
+{{- default "storemesh-bff" .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- define "storemesh-bff.fullname" -}}
+{{- default (include "storemesh-bff.name" .) .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}

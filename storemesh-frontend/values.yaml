@@ -1,5 +1,8 @@
 replicaCount: 2
 
+nameOverride: ""
+fullnameOverride: ""
+
 image:
   repository: ghcr.io/sartim/storemesh-frontend
   tag: "0.1.1"
