@@ -24,6 +24,8 @@ the runner is discarded. This is a smoke test environment, not persistent
 staging or production. The workflow supports both manual dispatch and
 `workflow_call`, so image-producing repositories can call this centralized
 deployment check after publishing an image without duplicating Helm or Kind
-logic. Manual runs against private images require the read-only repository
+logic. The generic frontend smoke deployment disables its optional Istio
+resources because the ephemeral cluster does not install Istio CRDs; Istio
+routing is verified in the local staging cluster separately. Manual runs against private images require the read-only repository
 secret `GHCR_READ_TOKEN`; a calling image repository can use its own workflow
 token instead.

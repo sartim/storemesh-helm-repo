@@ -84,12 +84,16 @@ jobs:
           IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
           helm lint "$CHART"
-          helm upgrade --install "$CHART" "$CHART" \
-            --namespace "$CHART" \
-            --create-namespace \
-            --set "image.tag=$IMAGE_TAG" \
-            --wait \
-            --timeout 10m
+          args=(upgrade --install "$CHART" "$CHART"
+            --namespace "$CHART"
+            --create-namespace
+            --set "image.tag=$IMAGE_TAG"
+            --wait
+            --timeout 10m)
+          if [ "$CHART" = "storemesh-frontend" ]; then
+            args+=(--set istio.enabled=false)
+          fi
+          helm "${args[@]}"
 
       - name: Verify workload
         env:
