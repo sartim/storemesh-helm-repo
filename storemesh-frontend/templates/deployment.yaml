@@ -33,6 +33,12 @@ spec:
               value: "3000"
             - name: HOSTNAME
               value: "0.0.0.0"
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /
