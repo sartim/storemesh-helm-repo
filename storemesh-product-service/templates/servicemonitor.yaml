@@ -3,8 +3,10 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: storemesh-product-service
+  {{- with .Values.serviceMonitor.additionalLabels }}
   labels:
-    {{- toYaml .Values.serviceMonitor.additionalLabels | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   selector:
     matchLabels: {app.kubernetes.io/name: storemesh-product-service}
