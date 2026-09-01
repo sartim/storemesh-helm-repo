@@ -1,0 +1,13 @@
+{{- if .Values.enabled }}
+apiVersion: platform.confluent.io/v1beta1
+kind: Kafka
+metadata:
+  name: {{ .Values.clusterName }}
+  labels: { app.kubernetes.io/part-of: storemesh }
+spec:
+  replicas: {{ .Values.replicas }}
+  image:
+    application: confluentinc/cp-server:8.0.0
+    init: confluentinc/confluent-init-container:3.0.0
+  dataVolumeCapacity: 10Gi
+{{- end }}

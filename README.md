@@ -41,3 +41,12 @@ resources because the ephemeral cluster does not install Istio CRDs; Istio
 routing is verified in the local staging cluster separately. Manual runs against private images require the read-only repository
 secret `GHCR_READ_TOKEN`; a calling image repository can use its own workflow
 token instead.
+
+## Kafka eventing
+
+`storemesh-kafka` contains Confluent for Kubernetes resources for a local KRaft
+cluster and initial StoreMesh topics. It is disabled by default because CFK
+CRDs must be installed first. Enable it only in an environment-specific
+release after installing CFK. Kafka is for asynchronous events and analytics;
+PostgreSQL and gRPC remain the transactional request path until outbox
+publishers are added.

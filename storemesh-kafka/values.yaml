@@ -1,0 +1,12 @@
+enabled: false
+clusterName: kafka
+replicas: 1
+topics:
+  - name: storemesh.order.events
+    partitions: 3
+  - name: storemesh.inventory.events
+    partitions: 3
+  - name: storemesh.cart.events
+    partitions: 3
+  - name: storemesh.analytics.events
+    partitions: 3
