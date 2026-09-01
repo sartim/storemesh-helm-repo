@@ -1,0 +1,29 @@
+{{- if .Values.realm.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "storemesh-keycloak.fullname" . }}-realm
+data:
+  storemesh-realm.json: |
+    {
+      "realm": "{{ .Values.realm.name }}",
+      "enabled": true,
+      "registrationAllowed": false,
+      "sslRequired": "none",
+      "roles": { "realm": [
+        { "name": "customer", "description": "StoreMesh customer" },
+        { "name": "admin", "description": "StoreMesh administrator" },
+        { "name": "operator", "description": "Platform operator" },
+        { "name": "observability-admin", "description": "Observability administrator" }
+      ]},
+      "clients": [
+        { "clientId": "storemesh-web", "name": "StoreMesh Web", "publicClient": true, "standardFlowEnabled": true, "directAccessGrantsEnabled": false, "redirectUris": ["http://localhost:3000/*"], "webOrigins": ["http://localhost:3000"] },
+        { "clientId": "storemesh-android", "name": "StoreMesh Android", "publicClient": true, "standardFlowEnabled": true, "directAccessGrantsEnabled": false, "redirectUris": ["com.storemesh.android://oauth/callback"] },
+        { "clientId": "storemesh-ios", "name": "StoreMesh iOS", "publicClient": true, "standardFlowEnabled": true, "directAccessGrantsEnabled": false, "redirectUris": ["storemesh-ios://oauth/callback"] },
+        { "clientId": "grafana", "publicClient": false, "standardFlowEnabled": true, "redirectUris": ["http://localhost:3001/login/generic_oauth"] },
+        { "clientId": "kiali", "publicClient": false, "standardFlowEnabled": true, "redirectUris": ["http://localhost:20001/*"] },
+        { "clientId": "kibana", "publicClient": false, "standardFlowEnabled": true, "redirectUris": ["http://localhost:5601/*"] },
+        { "clientId": "argocd", "publicClient": false, "standardFlowEnabled": true, "redirectUris": ["https://localhost:8443/auth/callback"] }
+      ]
+    }
+{{- end }}

@@ -14,3 +14,6 @@ resources:
   limits: { cpu: "1", memory: 1Gi }
 networkPolicy:
   enabled: false
+realm:
+  enabled: true
+  name: storemesh
