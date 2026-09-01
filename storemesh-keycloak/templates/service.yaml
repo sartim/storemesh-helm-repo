@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "storemesh-keycloak.fullname" . }}
+  labels: { app.kubernetes.io/name: {{ include "storemesh-keycloak.name" . }}, app.kubernetes.io/part-of: storemesh }
+spec:
+  selector: { app.kubernetes.io/name: {{ include "storemesh-keycloak.name" . }} }
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: http

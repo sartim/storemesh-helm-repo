@@ -2,6 +2,18 @@
 
 This repository contains the deployable StoreMesh Helm charts.
 
+## Keycloak identity provider
+
+`storemesh-keycloak` is the local OIDC foundation for the authentication
+refactor. It uses the official Keycloak image in `start-dev` mode and is
+intended for the Kind development cluster only. The default admin password is
+development-only and must be overridden through `admin.existingSecret` before
+any shared environment deployment.
+
+The chart currently provides the Keycloak runtime and service boundary. Realm
+import, StoreMesh/Grafana/Kiali/Kibana/Argo CD client registration, and BFF
+JWKS token validation are separate follow-up changes.
+
 ## Manual deployment
 
 The `Deploy Helm chart` GitHub Actions workflow is manually triggered with an
