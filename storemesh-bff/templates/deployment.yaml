@@ -37,6 +37,10 @@ spec:
               value: {{ .Values.config.userServiceAddr | quote }}
             - name: CORS_ALLOWED_ORIGIN
               value: {{ .Values.config.corsAllowedOrigin | quote }}
+            - name: KEYCLOAK_ISSUER
+              value: {{ .Values.config.keycloakIssuer | quote }}
+            - name: KEYCLOAK_AUDIENCE
+              value: {{ .Values.config.keycloakAudience | quote }}
           readinessProbe:
             httpGet:
               path: /healthz

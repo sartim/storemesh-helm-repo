@@ -17,6 +17,8 @@ config:
   orderServiceAddr: storemesh-order-service.storemesh-order-service.svc.cluster.local:50051
   userServiceAddr: storemesh-user-service.storemesh-user-service.svc.cluster.local:50051
   corsAllowedOrigin: http://localhost:3000
+  keycloakIssuer: ""
+  keycloakAudience: "storemesh-bff"
 
 networkPolicy:
   enabled: true
