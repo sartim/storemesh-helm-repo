@@ -17,7 +17,7 @@ serviceMonitor:
   additionalLabels: {}
 image:
   repository: ghcr.io/sartim/storemesh-order-service
-  tag: "0.2.1"
+  tag: "0.2.2"
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
