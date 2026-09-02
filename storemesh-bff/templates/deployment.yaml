@@ -41,6 +41,15 @@ spec:
               value: {{ .Values.config.keycloakIssuer | quote }}
             - name: KEYCLOAK_AUDIENCE
               value: {{ .Values.config.keycloakAudience | quote }}
+            - name: FLAGSMITH_BASE_URL
+              value: {{ .Values.config.flagsmithBaseURL | quote }}
+            {{- if .Values.flagsmith.enabled }}
+            - name: FLAGSMITH_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "flagsmith.existingSecret is required when flagsmith.enabled is true" .Values.flagsmith.existingSecret }}
+                  key: {{ .Values.flagsmith.apiKeyKey }}
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /healthz

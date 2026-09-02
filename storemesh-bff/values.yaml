@@ -19,6 +19,12 @@ config:
   corsAllowedOrigin: http://localhost:3000
   keycloakIssuer: ""
   keycloakAudience: "storemesh-bff"
+  flagsmithBaseURL: ""
+
+flagsmith:
+  enabled: false
+  existingSecret: ""
+  apiKeyKey: FLAGSMITH_API_KEY
 
 networkPolicy:
   enabled: true
