@@ -63,6 +63,30 @@ spec:
                 secretKeyRef:
                   name: {{ include "storemesh-user-service.secretName" . }}
                   key: JWT_SECRET
+            - name: DEMO_CUSTOMER_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "storemesh-user-service.secretName" . }}
+                  key: DEMO_CUSTOMER_EMAIL
+                  optional: true
+            - name: DEMO_CUSTOMER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "storemesh-user-service.secretName" . }}
+                  key: DEMO_CUSTOMER_PASSWORD
+                  optional: true
+            - name: DEMO_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "storemesh-user-service.secretName" . }}
+                  key: DEMO_ADMIN_EMAIL
+                  optional: true
+            - name: DEMO_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "storemesh-user-service.secretName" . }}
+                  key: DEMO_ADMIN_PASSWORD
+                  optional: true
           {{- if .Values.probes.startup.enabled }}
           startupProbe:
             httpGet:

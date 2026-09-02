@@ -60,6 +60,7 @@ config:
   otlpEndpoint: ""
   serviceName: storemesh-user-service
   serviceVersion: "0.1.0"
+  demoSeedEnabled: "false"
 
 secrets:
   existingSecret: ""
@@ -68,6 +69,10 @@ secrets:
     DATABASE_URL: ""
     REDIS_URL: ""
     JWT_SECRET: ""
+    DEMO_CUSTOMER_EMAIL: ""
+    DEMO_CUSTOMER_PASSWORD: ""
+    DEMO_ADMIN_EMAIL: ""
+    DEMO_ADMIN_PASSWORD: ""
 externalSecrets:
   enabled: false
   secretStoreRef:

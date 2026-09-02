@@ -18,3 +18,4 @@ data:
   OTLP_ENDPOINT: {{ .Values.config.otlpEndpoint | quote }}
   SERVICE_NAME: {{ .Values.config.serviceName | quote }}
   SERVICE_VERSION: {{ .Values.config.serviceVersion | quote }}
+  DEMO_SEED_ENABLED: {{ .Values.config.demoSeedEnabled | quote }}
