@@ -71,7 +71,7 @@ jobs:
           IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
           case "$CHART" in
-            storemesh-bff) IMAGE="ghcr.io/sartim/storemesh-bff:$IMAGE_TAG" ;;
+            storemesh-bff) IMAGE="ghcr.io/sartim/storemesh-bff-service:$IMAGE_TAG" ;;
             storemesh-frontend) IMAGE="ghcr.io/sartim/storemesh-frontend:$IMAGE_TAG" ;;
             *) echo "Unsupported smoke chart" >&2; exit 1 ;;
           esac
