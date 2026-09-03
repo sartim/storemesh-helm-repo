@@ -45,8 +45,10 @@ token instead.
 ## Kafka eventing
 
 `storemesh-kafka` contains Confluent for Kubernetes resources for a local KRaft
-cluster and initial StoreMesh topics. It is disabled by default because CFK
-CRDs must be installed first. Enable it only in an environment-specific
-release after installing CFK. Kafka is for asynchronous events and analytics;
-PostgreSQL and gRPC remain the transactional request path until outbox
-publishers are added.
+cluster and initial StoreMesh topics. It is disabled by default, has no Argo CD
+Application, and is not installed by the normal local bootstrap. The Order
+Service also keeps its outbox publisher disabled by default. Enabling that
+publisher only starts a worker against an externally supplied Kafka endpoint;
+it does not install Kafka or Confluent for Kubernetes. PostgreSQL and gRPC
+remain the transactional request path, and pending outbox records preserve
+events while Kafka is unavailable.

@@ -28,3 +28,36 @@ spec:
             - name: INVENTORY_SERVICE_ADDRESS
               value: {{ .Values.dependencies.inventoryAddress | quote }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
+---
+{{- if .Values.kafka.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storemesh-order-service-outbox-publisher
+  labels:
+    app.kubernetes.io/name: storemesh-order-service-outbox-publisher
+    app.kubernetes.io/component: outbox-publisher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: storemesh-order-service-outbox-publisher
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: storemesh-order-service-outbox-publisher
+        app.kubernetes.io/component: outbox-publisher
+    spec:
+      securityContext: {runAsNonRoot: true, runAsUser: 65532, runAsGroup: 65532, fsGroup: 65532}
+      containers:
+        - name: outbox-publisher
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/app/storemesh-order-publisher"]
+          env:
+            - name: DATABASE_URL
+              valueFrom: {secretKeyRef: {name: {{ .Values.secrets.existingSecret }}, key: DATABASE_URL}}
+            - name: KAFKA_BROKERS
+              value: {{ required "kafka.brokers is required when kafka.enabled is true" .Values.kafka.brokers | quote }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+{{- end }}
