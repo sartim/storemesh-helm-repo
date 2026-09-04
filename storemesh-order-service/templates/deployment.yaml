@@ -27,6 +27,10 @@ spec:
               value: {{ .Values.dependencies.productAddress | quote }}
             - name: INVENTORY_SERVICE_ADDRESS
               value: {{ .Values.dependencies.inventoryAddress | quote }}
+            - name: KEYCLOAK_ISSUER
+              value: {{ .Values.config.keycloakIssuer | quote }}
+            - name: KEYCLOAK_AUDIENCE
+              value: {{ .Values.config.keycloakAudience | quote }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
 ---
 {{- if .Values.kafka.enabled }}

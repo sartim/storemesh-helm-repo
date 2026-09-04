@@ -32,6 +32,9 @@ externalSecrets:
 dependencies:
   productAddress: storemesh-product-service.storemesh-product-service.svc.cluster.local:50051
   inventoryAddress: storemesh-inventory-service.storemesh-inventory-service.svc.cluster.local:50051
+config:
+  keycloakIssuer: ""
+  keycloakAudience: storemesh-bff
 kafka:
   # This only runs the publisher; it does not install Kafka or Confluent for Kubernetes.
   enabled: false
