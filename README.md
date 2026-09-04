@@ -10,9 +10,10 @@ intended for the Kind development cluster only. The default admin password is
 development-only and must be overridden through `admin.existingSecret` before
 any shared environment deployment.
 
-The chart currently provides the Keycloak runtime and service boundary. Realm
-import, StoreMesh/Grafana/Kiali/Kibana/Argo CD client registration, and BFF
-JWKS token validation are separate follow-up changes.
+The chart provides the Keycloak runtime and service boundary, imports the local
+realm, and registers StoreMesh client applications. The web, Android, and iOS
+clients include an explicit `storemesh-bff` access-token audience mapper so the
+BFF and downstream services can enforce audience validation consistently.
 
 ## Manual deployment
 
