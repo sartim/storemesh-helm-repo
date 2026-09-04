@@ -37,6 +37,8 @@ externalSecrets:
 config:
   jwtIssuer: storemesh-product-service
   jwtAudience: storemesh-platform
+  keycloakIssuer: ""
+  keycloakAudience: storemesh-bff
 
 resources:
   requests:

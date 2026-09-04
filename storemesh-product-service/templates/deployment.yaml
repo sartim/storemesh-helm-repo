@@ -43,4 +43,8 @@ spec:
               value: {{ .Values.config.jwtIssuer | quote }}
             - name: JWT_AUDIENCE
               value: {{ .Values.config.jwtAudience | quote }}
+            - name: KEYCLOAK_ISSUER
+              value: {{ .Values.config.keycloakIssuer | quote }}
+            - name: KEYCLOAK_AUDIENCE
+              value: {{ .Values.config.keycloakAudience | quote }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
