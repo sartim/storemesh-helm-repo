@@ -23,6 +23,9 @@ service:
   port: 50051
 secrets:
   existingSecret: storemesh-inventory-service-secrets
+config:
+  keycloakIssuer: ""
+  keycloakAudience: storemesh-bff
 externalSecrets:
   enabled: false
   secretStoreRef: {name: "", kind: ClusterSecretStore}
