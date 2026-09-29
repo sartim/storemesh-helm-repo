@@ -28,5 +28,8 @@ jobs:
       - name: Validate chart
         run: scripts/helm-validate.sh
 
+      - name: Validate Keycloak platform role contract
+        run: python3 scripts/validate-keycloak-oidc.py
+
       - name: Package chart
         run: scripts/chart-package.sh
