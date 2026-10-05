@@ -26,6 +26,10 @@ secrets:
 config:
   keycloakIssuer: ""
   keycloakAudience: storemesh-bff
+kafka:
+  # This only runs the publisher; it does not install Kafka or Confluent for Kubernetes.
+  enabled: false
+  brokers: ""
 externalSecrets:
   enabled: false
   secretStoreRef: {name: "", kind: ClusterSecretStore}
