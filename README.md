@@ -14,6 +14,16 @@ The chart provides the Keycloak runtime and service boundary, imports the local
 realm, and registers StoreMesh client applications. The web, Android, and iOS
 clients include an explicit `storemesh-bff` access-token audience mapper so the
 BFF and downstream services can enforce audience validation consistently.
+The platform clients map realm roles into a `groups` claim. Their local exact
+callback URIs are defaults under `realm.clients.*.redirectUris`; override
+these per environment with an issuer and callback topology reachable from the
+browser and each workload. Wildcard redirects are intentionally excluded.
+
+The matching platform role examples live in the
+[`storemesh-argocd-repo`](https://github.com/sartim/storemesh-argocd-repo/tree/main/examples).
+Kiali OIDC still requires Kubernetes API OIDC trust and RBAC for per-user
+authorization. Kibana OIDC SSO requires an Elastic subscription that includes
+SSO; it is not available on the default free Basic license.
 
 ## Manual deployment
 

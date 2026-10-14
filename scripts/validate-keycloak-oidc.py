@@ -4,6 +4,7 @@
 import json
 import re
 import subprocess
+from urllib.parse import urlparse
 
 
 rendered = subprocess.check_output(
@@ -36,4 +37,40 @@ for client_id in sorted(tool_clients):
     if groups_mapper is None:
         raise SystemExit(f"{client_id} does not map realm roles to the groups claim")
 
-print("Keycloak platform role contract is valid")
+expected_redirects = {
+    "grafana": "http://localhost:3001/login/generic_oauth",
+    "kiali": "https://localhost:20001/kiali",
+    "kibana": "https://localhost:5601/api/security/oidc/callback",
+    "argocd": "https://localhost:8443/auth/callback",
+}
+for client_id, redirect_uri in expected_redirects.items():
+    redirects = clients[client_id].get("redirectUris", [])
+    if redirect_uri not in redirects:
+        raise SystemExit(f"{client_id} must register exact local redirect URI {redirect_uri}")
+    if any("*" in candidate for candidate in redirects):
+        raise SystemExit(f"{client_id} must not use wildcard redirect URIs")
+
+custom_redirects = {
+    client_id: f"https://{client_id}.example.test{urlparse(uri).path}"
+    for client_id, uri in expected_redirects.items()
+}
+override_args = [
+    "helm", "template", "storemesh-keycloak", "storemesh-keycloak",
+    "--set", "realm.enabled=true",
+]
+for client_id, redirect_uri in custom_redirects.items():
+    override_args.extend([
+        "--set-json",
+        f"realm.clients.{client_id}.redirectUris={json.dumps([redirect_uri])}",
+    ])
+custom_render = subprocess.check_output(override_args, text=True)
+custom_match = re.search(r"storemesh-realm\.json: \|\n((?:  .*\n)*)", custom_render)
+if not custom_match:
+    raise SystemExit("custom realm ConfigMap was not rendered")
+custom_realm = json.loads("".join(line[2:] for line in custom_match.group(1).splitlines(True)))
+custom_clients = {client["clientId"]: client for client in custom_realm["clients"]}
+for client_id, redirect_uri in custom_redirects.items():
+    if custom_clients[client_id].get("redirectUris") != [redirect_uri]:
+        raise SystemExit(f"{client_id} does not honor its environment callback override")
+
+print("Keycloak platform role and callback contract is valid")

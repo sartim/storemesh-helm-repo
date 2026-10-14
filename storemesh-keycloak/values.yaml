@@ -17,3 +17,16 @@ networkPolicy:
 realm:
   enabled: true
   name: storemesh
+  clients:
+    grafana:
+      redirectUris:
+        - http://localhost:3001/login/generic_oauth
+    kiali:
+      redirectUris:
+        - https://localhost:20001/kiali
+    kibana:
+      redirectUris:
+        - https://localhost:5601/api/security/oidc/callback
+    argocd:
+      redirectUris:
+        - https://localhost:8443/auth/callback
