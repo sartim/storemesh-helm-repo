@@ -4,11 +4,20 @@ This repository contains the deployable StoreMesh Helm charts.
 
 ## Keycloak identity provider
 
-`storemesh-keycloak` is the local OIDC foundation for the authentication
-refactor. It uses the official Keycloak image in `start-dev` mode and is
-intended for the Kind development cluster only. The default admin password is
-development-only and must be overridden through `admin.existingSecret` before
-any shared environment deployment.
+`storemesh-keycloak` is an optional local identity provider for development
+and disposable test environments. It uses the official Keycloak image in
+`start-dev` mode and is not a shared-environment or production deployment.
+Its Argo CD Application is excluded from the normal bootstrap. The chart's
+development-only admin password must never be reused outside an isolated
+environment.
+
+For shared environments, the recommended model is an externally operated
+Keycloak deployment (or another operator-approved OIDC provider). StoreMesh
+charts consume that provider's issuer; they do not install or own the shared
+identity service. The environment operator owns Keycloak availability,
+database, TLS, backups, realm lifecycle, and secret rotation. Do not set
+service issuer values until the issuer in the token and the configured issuer
+are identical and reachable by each validating workload.
 
 The chart provides the Keycloak runtime and service boundary, imports the local
 realm, and registers StoreMesh client applications. The web, Android, and iOS
@@ -18,6 +27,9 @@ The platform clients map realm roles into a `groups` claim. Their local exact
 callback URIs are defaults under `realm.clients.*.redirectUris`; override
 these per environment with an issuer and callback topology reachable from the
 browser and each workload. Wildcard redirects are intentionally excluded.
+The chart's localhost callbacks and imported realm are development fixtures,
+not defaults for a shared identity deployment. Keep client secrets in the
+target environment's secret manager, never in Helm values committed to Git.
 
 The matching platform role examples live in the
 [`storemesh-argocd-repo`](https://github.com/sartim/storemesh-argocd-repo/tree/main/examples).
