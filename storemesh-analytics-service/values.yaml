@@ -1,0 +1,18 @@
+replicaCount: 1
+image:
+  repository: ghcr.io/sartim/storemesh-analytics-service
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+secrets:
+  existingSecret: storemesh-analytics-service-secrets
+externalSecrets:
+  enabled: false
+  secretStoreRef: {name: "", kind: ClusterSecretStore}
+  remoteKey: ""
+  targetName: ""
+kafka:
+  brokers: ""
+  consumerGroup: storemesh-analytics
+resources:
+  requests: {cpu: 100m, memory: 128Mi}
+  limits: {memory: 128Mi}

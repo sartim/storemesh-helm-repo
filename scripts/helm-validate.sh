@@ -38,6 +38,13 @@ helm template storemesh-order-service "$order_chart" \
     --set kafka.enabled=true \
     --set kafka.brokers=broker.example:9092 >/dev/null
 
+analytics_chart="$repository_root/storemesh-analytics-service"
+helm lint --strict "$analytics_chart" \
+    --set kafka.brokers=broker.example:9092
+helm template storemesh-analytics-service "$analytics_chart" \
+    --namespace storemesh-analytics-service \
+    --set kafka.brokers=broker.example:9092 >/dev/null
+
 if grep -Eq 'image: .*:(latest|main)$' "$rendered"; then
     echo "default chart values must use an immutable runtime image tag" >&2
     exit 1
