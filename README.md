@@ -37,6 +37,11 @@ Kiali OIDC still requires Kubernetes API OIDC trust and RBAC for per-user
 authorization. Kibana OIDC SSO requires an Elastic subscription that includes
 SSO; it is not available on the default free Basic license.
 
+Helm CI also runs a short-lived Keycloak container from the chart-rendered
+realm, verifies management health and OIDC discovery, and removes the container
+after the check. This tests the development fixture only; it does not use or
+configure a shared identity provider or validate live platform-tool login.
+
 ## Manual deployment
 
 The `Deploy Helm chart` GitHub Actions workflow is manually triggered with an
