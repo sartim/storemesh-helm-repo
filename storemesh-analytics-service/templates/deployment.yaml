@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storemesh-analytics-service
+  labels:
+    app.kubernetes.io/name: storemesh-analytics-service
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {app.kubernetes.io/name: storemesh-analytics-service}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: storemesh-analytics-service}
+    spec:
+      securityContext: {runAsNonRoot: true, runAsUser: 65532, runAsGroup: 65532, fsGroup: 65532}
+      containers:
+        - name: analytics-consumer
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/app/storemesh-analytics-consumer"]
+          env:
+            - name: DATABASE_URL
+              valueFrom: {secretKeyRef: {name: {{ .Values.secrets.existingSecret }}, key: DATABASE_URL}}
+            - name: KAFKA_BROKERS
+              value: {{ required "kafka.brokers is required" .Values.kafka.brokers | quote }}
+            - name: KAFKA_CONSUMER_GROUP
+              value: {{ .Values.kafka.consumerGroup | quote }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}

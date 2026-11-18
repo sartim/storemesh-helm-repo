@@ -1,0 +1,6 @@
+apiVersion: v2
+name: storemesh-analytics-service
+description: Opt-in StoreMesh Kafka analytics consumer
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
